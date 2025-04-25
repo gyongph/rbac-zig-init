@@ -5,5 +5,6 @@ fill up all the fields
 then run this
 
 ```
+source .env
 zig build run
 ```
