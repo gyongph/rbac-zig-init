@@ -12,6 +12,3 @@ pub const path = "/account";
 pub const other_routes = @import("other-routes.zig");
 pub const field_access = @import("field-access.zig");
 pub const record_access = @import("record-access.zig");
-pub fn getAccessor(_: Handler, _: *httpz.Request, _: *httpz.Response) !Types.Accessor {
-    return .public;
-}

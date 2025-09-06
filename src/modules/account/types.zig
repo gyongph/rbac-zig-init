@@ -1,4 +1,6 @@
 const std = @import("std");
+const Handler = @import("../../handler.zig");
+const httpz = @import("httpz");
 const TypeUtils = @import("type-utils");
 pub const Schema = struct {
     id: []const u8,
@@ -19,4 +21,7 @@ pub const Accessor = enum {
     admin,
     owner,
     public,
+    pub fn get(_: Handler, _: *httpz.Request, _: *httpz.Response) !Accessor {
+        return .public;
+    }
 };

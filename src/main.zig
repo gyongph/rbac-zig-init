@@ -7,19 +7,28 @@ const env = @import("env.zig");
 const pb_db = @import("db/conn.zig");
 pub fn main() !void {
     try env.init();
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var gpa = std.heap.DebugAllocator(.{}){};
+    defer _ = gpa.deinit();
     const gpa_alloc = gpa.allocator();
     var app = try RBAC.init(
         Handler{
             .user = .{
-                .role = .guest,
-                .id = &String.random(10),
+                .guest = {},
             },
             .pg_pool = try pb_db.init(gpa_alloc, 69),
         },
         gpa_alloc,
-        .{ .port = 5454 },
+        .{
+            .address = "0.0.0.0",
+            .port = 8080,
+        },
+        .{
+            .allow_creds = true,
+            .origins = "https://example.com",
+            .headers = "Content-Type, Authorization",
+            .methods = "GET, PATCH, POST, DELETE, PUT",
+        },
     );
-    try app.registerModule(AccountModule);
+    try app.register(AccountModule);
     try app.listen();
 }
